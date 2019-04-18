@@ -1,20 +1,18 @@
 import json
-
-import requests
 from requests.cookies import cookiejar_from_dict
-
 from apps.bilibili.bilibili_helper import BilibiliHelper
+from apps.bilibili.bilibili_http import BilibiliHttp
 from libs.cookies import Cookies
+from libs.geetest import Geetest
 from libs.logger import logger
 
 
-class BilibiliSpider:
-
+class BilibiliLoginSpider:
     def __init__(self, username: str, password: str, headless: bool = True):
         self.username = username
         self.password = password
         self.headless = headless
-        self.sess = requests.session()
+        self.sess = BilibiliHttp(login=True).sess
         self.csrf = None
         self.uid = None
         self.cookies = None
@@ -52,7 +50,7 @@ class BilibiliSpider:
                 'user': self.username,
                 'passwd': self.password
             }
-            res = requests.post(url=url, data=data).json()
+            res = BilibiliHttp(login=False).sess.post(url=url, data=data).json()
             if res.get('status') != 'OK':
                 raise Exception('login failed', res['info'])
             cookies = res['cookies']
@@ -161,45 +159,6 @@ class BilibiliSpider:
             raise Exception('post dynamic failed', res.get('msg'))
         logger.info('post dynamic success: %s', res['data']['errmsg'])
 
-    @staticmethod
-    def get_username_by_uid(uid: int):
-        url = "https://api.bilibili.com/x/space/acc/info"
-        params = {
-            'mid': uid
-        }
-        res = requests.get(url=url, params=params).json()
-        if res.get('code'):
-            raise Exception('get username failed', res.get('msg'))
-        name = res['data']['name']
-        logger.info('get username success: %s', name)
-        return name
-
-    @staticmethod
-    def get_dynamic_list_by_uid(uid: int):
-        url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history"
-        params = {
-            'host_uid': uid
-        }
-        res = requests.get(url=url, params=params).json()
-        if res.get('code'):
-            raise Exception('get dynamic list failed', res.get('msg'))
-        res_list = BilibiliHelper.parse_dynamic_list(res)
-        logger.info('get dynamic list success: %s', res_list)
-        return res_list
-
-    @staticmethod
-    def get_lottery_notice(dynamic_id: int):
-        url = "https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice"
-        params = {
-            'dynamic_id': dynamic_id
-        }
-        res = requests.get(url=url, params=params).json()
-        if res.get('code'):
-            raise Exception('get lottery notice failed', res.get('msg'))
-        data = BilibiliHelper.parse_lottery_notice(res)
-        logger.info('get lottery notice success: %s', data)
-        return data
-
     def save_to_disk(self):
         Cookies.save_to_disk(self.cookies, '{}.cookies'.format(self.username))
 
@@ -222,6 +181,47 @@ class BilibiliSpider:
         logger.info('get dynamic list success: %s', res_list)
         return res_list
 
+
+class BiliBiliNoLoginSpider:
+    @staticmethod
+    def get_username_by_uid(uid: int):
+        url = "https://api.bilibili.com/x/space/acc/info"
+        params = {
+            'mid': uid
+        }
+        res = BilibiliHttp(False).sess.get(url=url, params=params).json()
+        if res.get('code'):
+            raise Exception('get username failed', res.get('msg'))
+        name = res['data']['name']
+        logger.info('get username success: %s', name)
+        return name
+
+    @staticmethod
+    def get_dynamic_list_by_uid(uid: int):
+        url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history"
+        params = {
+            'host_uid': uid
+        }
+        res = BilibiliHttp(False).sess.get(url=url, params=params).json()
+        if res.get('code'):
+            raise Exception('get dynamic list failed', res.get('msg'))
+        res_list = BilibiliHelper.parse_dynamic_list(res)
+        logger.info('get dynamic list success: %s', res_list)
+        return res_list
+
+    @staticmethod
+    def get_lottery_notice(dynamic_id: int):
+        url = "https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice"
+        params = {
+            'dynamic_id': dynamic_id
+        }
+        res = BilibiliHttp(False).sess.get(url=url, params=params).json()
+        if res.get('code'):
+            raise Exception('get lottery notice failed', res.get('msg'))
+        data = BilibiliHelper.parse_lottery_notice(res)
+        logger.info('get lottery notice success: %s', data)
+        return data
+
     @staticmethod
     def get_followings_by_uid(uid: int, pn: int = 1, ps: int = 20, order: str = 'desc'):
         url = "https://api.bilibili.com/x/relation/followings"
@@ -231,7 +231,7 @@ class BilibiliSpider:
             'ps': ps,
             'order': order
         }
-        res = requests.get(url, params=params).json()
+        res = BilibiliHttp(False).sess.get(url, params=params).json()
         res_list = BilibiliHelper.parse_followings_list(res)
         return res_list
 
@@ -241,7 +241,7 @@ class BilibiliSpider:
         params = {
             'vmid': uid
         }
-        res = requests.get(url, params=params).json()
+        res = BilibiliHttp(False).sess.get(url, params=params).json()
         if res.get('code'):
             raise Exception('get follow stat failed %s', res.get('message'))
         data = {
@@ -253,7 +253,8 @@ class BilibiliSpider:
 
 
 if __name__ == '__main__':
-    user = BilibiliSpider('username', 'password', False)
+    user = BilibiliLoginSpider('username', 'password', False)
     user.login()
 
-    user.get_followings_by_uid(user.uid)
+    a = BiliBiliNoLoginSpider.get_followings_by_uid(111111)
+    print(a)
