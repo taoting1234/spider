@@ -8,10 +8,13 @@ from libs.logger import logger
 
 
 class BilibiliLoginSpider:
-    def __init__(self, username: str, password: str, headless: bool = True):
+    def __init__(self, username: str, password: str):
+        """
+        :param username: 用户名
+        :param password: 密码
+        """
         self.username = username
         self.password = password
-        self.headless = headless
         self.sess = BilibiliHttp(login=True).sess
         self.csrf = None
         self.uid = None
@@ -29,14 +32,15 @@ class BilibiliLoginSpider:
             self.save_to_disk()
             self.get_user_info()
 
-    def __login(self, type_: int = 1):
+    def __login(self, type_: int = 1, headless: bool = True):
         """
         登录bilibili
         :param type_: 登录方式 （1为selenium登录，2为api接口登录）
+        :param headless: 当登录方式为1时，是否使用无头浏览器
         """
         if type_ == 1:
             url = "https://passport.bilibili.com/login"
-            geetest = Geetest(url, headless=self.headless)
+            geetest = Geetest(url, headless=headless)
             geetest.send_keys(self.username, '//*[@id="login-username"]')
             geetest.send_keys(self.password, '//*[@id="login-passwd"]')
             t = 0
