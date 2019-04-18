@@ -6,17 +6,19 @@ from libs.xmlparser import XmlParser
 
 class JsxySpider:
     @staticmethod
-    def get_article_list(constant_id: int):
+    def get_article_list(constant_id: int, start: int = 1, page_num: int = 15):
         """
         获取文章列表
-        :param constant_id:jsxy_constant定义的常量
-        :return:文章列表
+        :param constant_id: jsxy_constant定义的常量
+        :param start: 开始页数
+        :param page_num: 每页文件数量
+        :return: 文章列表
         """
         url = "http://jsxy.zucc.edu.cn/module/web/jpage/dataproxy.jsp"
         params = {
-            'startrecord': 1,
-            'endrecord': 45,
-            'perpage': 15
+            'startrecord': (start - 1) * page_num,
+            'endrecord': start * page_num,
+            'perpage': page_num
         }
         data = {
             'col': 1,
@@ -37,7 +39,7 @@ class JsxySpider:
 
 if __name__ == '__main__':
     jsxy = JsxySpider()
-    a = jsxy.get_article_list(JsxyConstant.XSGZ_DEKT)
+    a = jsxy.get_article_list(JsxyConstant.JXJW_JXTZ)
     from prettyprinter import cpprint
 
     cpprint(a)
