@@ -2,8 +2,8 @@ from libs.http import Http
 
 
 class FanyiHttp(Http):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
         self.sess.headers['Referer'] = "https://fanyi.baidu.com/"
         self.sess.headers['Host'] = "fanyi.baidu.com"
         self.sess.headers['Cookie'] = \
