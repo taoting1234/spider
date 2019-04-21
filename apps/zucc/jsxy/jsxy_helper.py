@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup
+from libs.xmlparser import XmlParser
 
 
 class JsxyHelper:
     @staticmethod
-    def parse_article_list(raw: dict) -> list:
+    def parse_article_list(raw: str) -> [dict]:
+        res_dict = XmlParser.loads(raw)
         res_list = list()
         for i in raw['datastore']['recordset']['record']:
             bs = BeautifulSoup(i, 'lxml')

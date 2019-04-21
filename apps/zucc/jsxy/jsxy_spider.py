@@ -1,12 +1,11 @@
 from apps.zucc.jsxy.jsxy_constant import JsxyConstant
 from apps.zucc.jsxy.jsxy_helper import JsxyHelper
 from apps.zucc.jsxy.jsxy_http import JsxyHttp
-from libs.xmlparser import XmlParser
 
 
 class JsxySpider:
     @staticmethod
-    def get_article_list(constant_id: int, start: int = 1, page_num: int = 15):
+    def get_article_list(constant_id: int, start: int = 1, page_num: int = 15) -> [dict]:
         """
         获取文章列表
         :param constant_id: jsxy_constant定义的常量
@@ -32,15 +31,11 @@ class JsxySpider:
             'permissiontype': 1,
         }
         res = JsxyHttp().sess.post(url, params=params, data=data)
-        res_dict = XmlParser.loads(res.text)
-        res_list = JsxyHelper.parse_article_list(res_dict)
+        res_list = JsxyHelper.parse_article_list(res.text)
         return res_list
 
 
 if __name__ == '__main__':
     jsxy = JsxySpider()
     a = jsxy.get_article_list(JsxyConstant.JXJW_JXTZ)
-    from prettyprinter import cpprint
-
-    cpprint(a)
-    pass
+    print(a)
