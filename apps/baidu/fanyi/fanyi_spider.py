@@ -21,7 +21,7 @@ class FanyiSpider:
             'token': token,
             'sign': FanyiHelper.get_sign(keywords)
         }
-        res = FanyiHttp().sess.post(url=url, data=data).json()
+        res = FanyiHttp().post(url=url, data=data).json()
         return FanyiHelper.detail_translate_result(res)
 
 

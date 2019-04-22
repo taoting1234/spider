@@ -1,7 +1,5 @@
 from urllib.parse import urlencode
-
 from requests import Response
-
 from libs.logger import logger
 from apps.zf.zf_helper import ZfHelper
 from apps.zf.zf_http import ZfHttp
@@ -10,7 +8,7 @@ from io import BytesIO
 
 class ZfSpider:
     def __init__(self, id_: str, password: str, xn: str = '2018-2019', xq: str = '1',
-                 host: str = 'xk.zucc.edu.cn', encoding: str = 'gbk'):
+                 host: str = 'xk.zucc.edu.cn'):
         """
         :param _id: 学号
         :param password: 密码
@@ -23,8 +21,7 @@ class ZfSpider:
         self.xn = xn
         self.xq = xq
         self.host = host
-        self.encoding = encoding
-        self.sess = ZfHttp().sess
+        self.sess = ZfHttp()
         self.is_login = False
         self.username = None
         self.main_url = None
@@ -36,7 +33,6 @@ class ZfSpider:
         """
         url = 'http://{}/'.format(self.host)
         res = self.sess.get(url=url)
-        res.encoding = self.encoding
         return res
 
     def __get_checkcode(self) -> str:
@@ -46,7 +42,7 @@ class ZfSpider:
         """
         index_res = self.__get_index()
         url = 'http://{}/CheckCode.aspx'.format(self.host)
-        self.sess.headers['Referer'] = index_res.url
+        self.sess.headers.update({'Referer': index_res.url})
         res = self.sess.get(url=url)
         image = BytesIO(res.content)
         return ZfHelper.get_checkcode(image)
@@ -70,9 +66,8 @@ class ZfSpider:
             'hidPdrs': '',
             'hidsc': '',
         }
-        self.sess.headers['Referer'] = url
-        res = self.sess.post(url=url, data=urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        self.sess.headers.update({'Referer': url})
+        res = self.sess.post(url=url, data=data)
         if res.url == index_res.url:
             info = ZfHelper.get_alert_info(res.text)
             # 判断失败原因
@@ -87,15 +82,13 @@ class ZfSpider:
 
     def __get_class_schedule(self):
         url = 'http://' + self.host + '/xskbcx.aspx'
-        url_data = {
+        params = {
             'xh': self.id,
             'xm': self.username,
             'gnmkdm': 'N121603'
         }
-        url += "?" + urlencode(url_data, encoding=self.encoding)
-        self.sess.headers['Referer'] = self.main_url
-        res = self.sess.get(url=url)
-        res.encoding = self.encoding
+        self.sess.headers.update({'Referer': self.main_url})
+        res = self.sess.get(url=url, params=params)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         if xn == self.xn and xq == self.xq:
@@ -107,8 +100,7 @@ class ZfSpider:
             'xnd': self.xn,
             'xqd': xq
         }
-        res = self.sess.post(url=url, data=urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         if xn == self.xn and xq == self.xq:
@@ -120,8 +112,7 @@ class ZfSpider:
             'xnd': self.xn,
             'xqd': self.xq
         }
-        res = self.sess.post(url=url, data=urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         return res
 
     def get_class_schedule(self) -> [dict]:
@@ -139,15 +130,13 @@ class ZfSpider:
 
     def __get_grade(self):
         url = 'http://{}/xscj_gc2.aspx'.format(self.host)
-        url_data = {
+        params = {
             'xh': self.id,
             'xm': self.username,
             'gnmkdm': 'N121617'
         }
-        self.sess.headers['Referer'] = self.main_url
-        url += "?" + urlencode(url_data, encoding=self.encoding)
-        res = self.sess.get(url=url)
-        res.encoding = self.encoding
+        self.sess.headers.update({'Referer': self.main_url})
+        res = self.sess.get(url=url, params=params)
 
         data = {
             '__VIEWSTATE': ZfHelper.get_viewstate(res.text),
@@ -155,8 +144,7 @@ class ZfSpider:
             'ddlXQ': self.xq,
             'Button1': '按学期查询'
         }
-        res = self.sess.post(url=url, data=urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         return res
 
     def get_grade(self) -> [dict]:
@@ -170,15 +158,13 @@ class ZfSpider:
 
     def __get_examination_room(self):
         url = 'http://' + self.host + '/xskscx.aspx'
-        url_data = {
+        params = {
             'xh': self.id,
             'xm': self.username,
             'gnmkdm': 'N121604'
         }
-        url += "?" + urlencode(url_data, encoding=self.encoding)
-        self.sess.headers['Referer'] = self.main_url
-        res = self.sess.get(url=url)
-        res.encoding = self.encoding
+        self.sess.headers.update({'Referer': self.main_url})
+        res = self.sess.get(url=url, params=params)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         if xn == self.xn and xq == self.xq:
@@ -190,8 +176,7 @@ class ZfSpider:
             'xnd': self.xn,
             'xqd': xq
         }
-        res = self.sess.post(url=url, data=urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         if xn == self.xn and xq == self.xq:
@@ -203,8 +188,7 @@ class ZfSpider:
             'xnd': self.xn,
             'xqd': self.xq
         }
-        res = self.sess.post(url=url, data=urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         return res
 
     def get_examination_room(self) -> [dict]:
@@ -222,15 +206,13 @@ class ZfSpider:
 
     def __get_makeup_examination_room(self):
         url = 'http://' + self.host + '/XsBkKsCx.aspx'
-        url_data = {
+        params = {
             'xh': self.id,
             'xm': self.username,
             'gnmkdm': 'N121608'
         }
-        url += "?" + urlencode(url_data, encoding=self.encoding)
-        self.sess.headers['Referer'] = self.main_url
-        res = self.sess.get(url=url)
-        res.encoding = self.encoding
+        self.sess.headers.update({'Referer', self.main_url})
+        res = self.sess.get(url=url, params=params)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         if xn == self.xn and xq == self.xq:
@@ -242,8 +224,7 @@ class ZfSpider:
             'xnd': self.xn,
             'xqd': xq
         }
-        res = self.sess.post(url, urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         if xn == self.xn and xq == self.xq:
@@ -255,8 +236,7 @@ class ZfSpider:
             'xnd': self.xn,
             'xqd': self.xq
         }
-        res = self.sess.post(url, urlencode(data, encoding=self.encoding))
-        res.encoding = self.encoding
+        res = self.sess.post(url=url, params=params, data=data)
         return res
 
     def get_makeup_examination_room(self) -> [dict]:

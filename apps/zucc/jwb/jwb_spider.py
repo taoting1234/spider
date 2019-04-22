@@ -12,8 +12,7 @@ class JwbSpider:
             'a': 'tlist',
             'id': constant_id
         }
-        res = JwbHttp().sess.get(url=url, params=params)
-        res.encoding = 'gbk'
+        res = JwbHttp().get(url=url, params=params)
         return JwbHelper.parse_article_list(res.text)
 
 

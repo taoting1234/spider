@@ -11,8 +11,7 @@ class BiqubaoSpider:
         :return: 章节列表
         """
         url = 'https://www.biqubao.com/book/{}/'.format(novel_id)
-        res = BiqubaoHttp().sess.get(url=url)
-        res.encoding = 'gbk'
+        res = BiqubaoHttp().get(url=url)
         return BiqubaoHelper.parse_chapter_list(res.text)
 
     @staticmethod
@@ -24,8 +23,7 @@ class BiqubaoSpider:
         :return: 小说内容
         """
         url = 'https://www.biqubao.com/book/{}/{}.html'.format(novel_id, chapter_id)
-        res = BiqubaoHttp().sess.get(url=url)
-        res.encoding = 'gbk'
+        res = BiqubaoHttp().get(url=url)
         return BiqubaoHelper.parse_content(res.text)
 
 

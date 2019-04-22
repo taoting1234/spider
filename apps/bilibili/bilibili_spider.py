@@ -240,7 +240,7 @@ class BiliBiliNoLoginSpider:
         params = {
             'mid': uid
         }
-        res = BilibiliHttp(False).sess.get(url=url, params=params).json()
+        res = BilibiliHttp().get(url=url, params=params).json()
         if res.get('code'):
             raise Exception('get username failed', res.get('msg'))
         name = res['data']['name']
@@ -258,7 +258,7 @@ class BiliBiliNoLoginSpider:
         params = {
             'host_uid': uid
         }
-        res = BilibiliHttp(False).sess.get(url=url, params=params).json()
+        res = BilibiliHttp().get(url=url, params=params).json()
         if res.get('code'):
             raise Exception('get dynamic list failed', res.get('msg'))
         res_list = BilibiliHelper.parse_dynamic_list(res)
@@ -276,7 +276,7 @@ class BiliBiliNoLoginSpider:
         params = {
             'dynamic_id': dynamic_id
         }
-        res = BilibiliHttp(False).sess.get(url=url, params=params).json()
+        res = BilibiliHttp().get(url=url, params=params).json()
         if res.get('code'):
             raise Exception('get lottery notice failed', res.get('msg'))
         data = BilibiliHelper.parse_lottery_notice(res)
@@ -300,7 +300,7 @@ class BiliBiliNoLoginSpider:
             'ps': ps,
             'order': order
         }
-        res = BilibiliHttp(False).sess.get(url, params=params).json()
+        res = BilibiliHttp().get(url=url, params=params).json()
         res_list = BilibiliHelper.parse_followings_list(res)
         return res_list
 
@@ -315,7 +315,7 @@ class BiliBiliNoLoginSpider:
         params = {
             'vmid': uid
         }
-        res = BilibiliHttp(False).sess.get(url, params=params).json()
+        res = BilibiliHttp().get(url=url, params=params).json()
         if res.get('code'):
             raise Exception('get follow stat failed %s', res.get('message'))
         data = {
