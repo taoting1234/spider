@@ -8,7 +8,7 @@ class FanyiSpider:
     @classmethod
     def base_translate(cls, data: str, from_: str = 'en', to: str = 'zh') -> str:
         """
-        翻译
+        基础翻译
         :param data: 需要翻译的单词或句子
         :param from_: 从什么语言翻译
         :param to: 翻译到什么语言
@@ -27,6 +27,13 @@ class FanyiSpider:
 
     @classmethod
     def paragraph_translate(cls, data: str, from_: str = 'en', to: str = 'zh') -> list:
+        """
+        段落翻译
+        :param data: 需要翻译的文章
+        :param from_: 从什么语言翻译
+        :param to: 翻译到什么语言
+        :return: 翻译的结果
+        """
         url = "https://fanyi.baidu.com/v2transapi"
         data = {
             'query': data,
