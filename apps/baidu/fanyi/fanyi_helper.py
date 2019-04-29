@@ -9,5 +9,9 @@ class FanyiHelper:
         return ctx.call('a', keywords)
 
     @staticmethod
-    def detail_translate_result(raw: dict) -> str:
+    def detail_base_translate_result(raw: dict) -> str:
         return raw['trans'][0]['dst']
+
+    @staticmethod
+    def detail_paragraph_translate_result(raw: dict) -> list:
+        return [i['dst'] for i in raw['trans_result']['data']]
