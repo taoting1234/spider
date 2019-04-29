@@ -1,8 +1,8 @@
-from apps.baidu.fanyi.fanyi_helper import FanyiHelper
-from apps.baidu.fanyi.fanyi_http import FanyiHttp
+from apps.baidu_fanyi.baidu_fanyi_helper import BaiduFanyiHelper
+from apps.baidu_fanyi.baidu_fanyi_http import BaiduFanyiHttp
 
 
-class FanyiSpider:
+class BaiduFanyiSpider:
     token = "98945f0628cf2a4b552845b3417270cd"
 
     @classmethod
@@ -20,10 +20,10 @@ class FanyiSpider:
             'from': from_,
             'to': to,
             'token': cls.token,
-            'sign': FanyiHelper.get_sign(data)
+            'sign': BaiduFanyiHelper.get_sign(data)
         }
-        res = FanyiHttp().post(url=url, data=data).json()
-        return FanyiHelper.detail_base_translate_result(res)
+        res = BaiduFanyiHttp().post(url=url, data=data).json()
+        return BaiduFanyiHelper.detail_base_translate_result(res)
 
     @classmethod
     def paragraph_translate(cls, data: str, from_: str = 'en', to: str = 'zh') -> list:
@@ -40,16 +40,16 @@ class FanyiSpider:
             'from': from_,
             'to': to,
             'token': cls.token,
-            'sign': FanyiHelper.get_sign(data),
+            'sign': BaiduFanyiHelper.get_sign(data),
             'transtype': 'translang',
             'simple_means_flag': 3
         }
-        res = FanyiHttp().post(url=url, data=data).json()
-        return FanyiHelper.detail_paragraph_translate_result(res)
+        res = BaiduFanyiHttp().post(url=url, data=data).json()
+        return BaiduFanyiHelper.detail_paragraph_translate_result(res)
 
 
 if __name__ == '__main__':
-    cls = FanyiSpider()
+    cls = BaiduFanyiSpider()
     s = """
     PySnooper is a poor man's debugger.
 

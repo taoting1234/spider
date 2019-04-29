@@ -1,7 +1,7 @@
 from libs.http import Http
 
 
-class FanyiHttp(Http):
+class BaiduFanyiHttp(Http):
     def __init__(self):
         super().__init__()
         headers = {

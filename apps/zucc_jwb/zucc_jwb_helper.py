@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup, NavigableString
 
 
-class JwbHelper:
+class ZuccJwbHelper:
     @staticmethod
     def parse_article_list(raw: str) -> [dict]:
         bs = BeautifulSoup(raw, "lxml")

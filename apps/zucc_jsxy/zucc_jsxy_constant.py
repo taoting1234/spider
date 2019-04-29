@@ -1,4 +1,4 @@
-class JsxyConstant:
+class ZuccJsxyConstant:
     XSGZ_RCTZ = 153  # 日常通知
     XSGZ_XWDT = 154  # 新闻动态
     XSGZ_PJPY = 158  # 评奖评优

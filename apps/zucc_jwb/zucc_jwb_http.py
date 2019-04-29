@@ -3,7 +3,7 @@ from requests import Response
 from libs.http import Http
 
 
-class JwbHttp(Http):
+class ZuccJwbHttp(Http):
     encoding = 'gbk'
 
     def __init__(self):

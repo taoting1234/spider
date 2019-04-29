@@ -1,10 +1,10 @@
 import execjs
 
 
-class FanyiHelper:
+class BaiduFanyiHelper:
     @staticmethod
     def get_sign(keywords: str) -> str:
-        with open('fanyi.js') as f:
+        with open('baidu_fanyi.js') as f:
             ctx = execjs.compile(f.read())
         return ctx.call('a', keywords)
 

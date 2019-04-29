@@ -1,9 +1,9 @@
-from apps.zucc.jsxy.jsxy_constant import JsxyConstant
-from apps.zucc.jsxy.jsxy_helper import JsxyHelper
-from apps.zucc.jsxy.jsxy_http import JsxyHttp
+from apps.zucc_jsxy.zucc_jsxy_constant import ZuccJsxyConstant
+from apps.zucc_jsxy.zucc_jsxy_helper import ZuccJsxyHelper
+from apps.zucc_jsxy.zucc_jsxy_http import ZuccJsxyHttp
 
 
-class JsxySpider:
+class ZuccJsxySpider:
     @staticmethod
     def get_article_list(constant_id: int, start: int = 1, page_num: int = 15) -> [dict]:
         """
@@ -30,12 +30,12 @@ class JsxySpider:
             'webname': '',
             'permissiontype': 1,
         }
-        res = JsxyHttp().sess.post(url, params=params, data=data)
-        res_list = JsxyHelper.parse_article_list(res.text)
+        res = ZuccJsxyHttp().sess.post(url, params=params, data=data)
+        res_list = ZuccJsxyHelper.parse_article_list(res.text)
         return res_list
 
 
 if __name__ == '__main__':
-    jsxy = JsxySpider()
-    a = jsxy.get_article_list(JsxyConstant.JXJW_JXTZ)
+    jsxy = ZuccJsxySpider()
+    a = jsxy.get_article_list(ZuccJsxyConstant.JXJW_JXTZ)
     print(a)
