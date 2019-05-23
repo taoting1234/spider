@@ -1,4 +1,4 @@
 .idea
 venv
-config.py
+spider/config.py
 test.py
