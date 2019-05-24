@@ -1,2 +1,2 @@
 include requirements.txt
-recursive-include apps *
+recursive-include spider *

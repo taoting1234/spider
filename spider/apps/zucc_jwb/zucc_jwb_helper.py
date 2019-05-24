@@ -6,7 +6,7 @@ class ZuccJwbHelper:
     def parse_article_list(raw: str) -> [dict]:
         bs = BeautifulSoup(raw, "lxml")
         res_list = list()
-        for i in bs.find(class_="contenter news_list").ul:
+        for i in bs.find(class_="newslist").ul:
             if isinstance(i, NavigableString):
                 continue
             res_list.append({

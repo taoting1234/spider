@@ -1,3 +1,4 @@
+import json
 import re
 import requests
 from io import BytesIO
@@ -9,10 +10,10 @@ class ZfHelper:
     @staticmethod
     def get_checkcode(image: BytesIO) -> str:
         try:
-            file = {'file': image}
-            res = requests.post(url="http://zf-server.newitd.com/upload", files=file, timeout=5)
+            data = image.read()
+            res = requests.post(url="http://63.211.111.82:19952/captcha/v3", data=data, timeout=5)
             res.raise_for_status()
-            return res.text
+            return json.loads(res.text).get('message')
         except:
             img = Image.open(image)
             img.show()
