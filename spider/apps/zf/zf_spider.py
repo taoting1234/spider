@@ -212,7 +212,7 @@ class ZfSpider:
             'xm': self.username,
             'gnmkdm': 'N121608'
         }
-        self.sess.headers.update({'Referer', self.main_url})
+        self.sess.headers.update({'Referer': self.main_url})
         res = self.sess.get(url=url, params=params)
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
@@ -258,5 +258,5 @@ class ZfSpider:
 if __name__ == '__main__':
     user = ZfSpider('username', 'password', '2018-2019', '1')
     user.login()
-    rr = user.get_grade()
+    rr = user.get_makeup_examination_room()
     print(rr)
