@@ -1,7 +1,8 @@
 import json
 import re
-import requests
 from io import BytesIO
+
+import requests
 from bs4 import BeautifulSoup
 from PIL import Image
 

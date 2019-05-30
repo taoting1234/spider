@@ -1,4 +1,5 @@
 from urllib.parse import urlencode
+
 from requests import Response
 
 from spider.libs.http import Http

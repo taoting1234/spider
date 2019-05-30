@@ -1,8 +1,9 @@
+import requests
 from faker import Faker
 from requests import Response
+
 from spider.config import *
 from spider.libs.proxy import Proxy
-import requests
 
 
 class Http:

@@ -1,8 +1,10 @@
+from io import BytesIO
+
 from requests import Response
-from spider.libs.logger import logger
+
 from spider.apps.zf.zf_helper import ZfHelper
 from spider.apps.zf.zf_http import ZfHttp
-from io import BytesIO
+from spider.libs.logger import logger
 
 
 class ZfSpider:

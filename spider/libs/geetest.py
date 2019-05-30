@@ -1,16 +1,18 @@
+import platform
 import random
 import re
-import requests
 import time
-import platform
+from io import BytesIO
+
+import requests
+from bs4 import BeautifulSoup
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup
-from io import BytesIO
+from selenium.webdriver.support.ui import WebDriverWait
+
 from spider.libs.cookies import Cookies
 from spider.libs.logger import logger
 
