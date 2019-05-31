@@ -75,7 +75,7 @@ class ZfSpider:
             if '验证码' in info:
                 logger.debug('验证码错误，正在重试')
                 return self.login()
-            raise Exception(('登录失败:%s', info))
+            raise Exception(('登录失败:' + info))
         # 获取信息
         self.username = ZfHelper.get_username(res.text)
         self.is_login = True
