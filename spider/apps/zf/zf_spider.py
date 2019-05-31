@@ -256,7 +256,7 @@ class ZfSpider:
 
 
 if __name__ == '__main__':
-    user = ZfSpider('32703384', 'password', '2018-2019', '1')
+    user = ZfSpider('username', 'password', '2018-2019', '1')
     user.login()
     rr = user.get_makeup_examination_room()
     print(rr)
