@@ -11,7 +11,7 @@ class ZfSpider:
     def __init__(self, id_: str, password: str, xn: str = '2018-2019', xq: str = '1',
                  host: str = 'xk.zucc.edu.cn'):
         """
-        :param _id: 学号
+        :param id_: 学号
         :param password: 密码
         :param xn: 学年
         :param xq: 学期
@@ -27,7 +27,7 @@ class ZfSpider:
         self.username = None
         self.main_url = None
 
-    def __get_index(self) -> Response:
+    def _get_index(self) -> Response:
         """
         获取首页
         :return: 首页response对象
@@ -36,12 +36,12 @@ class ZfSpider:
         res = self.sess.get(url=url)
         return res
 
-    def __get_checkcode(self) -> str:
+    def _get_checkcode(self) -> str:
         """
         获取验证码
         :return: 验证码的文本
         """
-        index_res = self.__get_index()
+        index_res = self._get_index()
         url = 'http://{}/CheckCode.aspx'.format(self.host)
         self.sess.headers.update({'Referer': index_res.url})
         res = self.sess.get(url=url)
@@ -52,8 +52,8 @@ class ZfSpider:
         """
         登录
         """
-        index_res = self.__get_index()
-        code = self.__get_checkcode()
+        index_res = self._get_index()
+        code = self._get_checkcode()
         url = index_res.url
         data = {
             '__VIEWSTATE': ZfHelper.get_viewstate(index_res.text),
@@ -81,7 +81,7 @@ class ZfSpider:
         self.is_login = True
         self.main_url = res.url
 
-    def __get_class_schedule(self):
+    def _get_class_schedule(self):
         url = 'http://' + self.host + '/xskbcx.aspx'
         params = {
             'xh': self.id,
@@ -122,14 +122,14 @@ class ZfSpider:
         """
         if self.is_login is False:
             self.login()
-        res = self.__get_class_schedule()
+        res = self._get_class_schedule()
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         assert xn == self.xn
         assert xq == self.xq
         return res
 
-    def __get_grade(self):
+    def _get_grade(self):
         url = 'http://{}/xscj_gc2.aspx'.format(self.host)
         params = {
             'xh': self.id,
@@ -154,10 +154,10 @@ class ZfSpider:
         """
         if self.is_login is False:
             self.login()
-        res = self.__get_grade()
+        res = self._get_grade()
         return ZfHelper.detail_grade(res.text)
 
-    def __get_examination_room(self):
+    def _get_examination_room(self):
         url = 'http://' + self.host + '/xskscx.aspx'
         params = {
             'xh': self.id,
@@ -198,7 +198,7 @@ class ZfSpider:
         """
         if self.is_login is False:
             self.login()
-        res = self.__get_examination_room()
+        res = self._get_examination_room()
         xn = ZfHelper.get_current_xn(res.text)
         xq = ZfHelper.get_current_xq(res.text)
         assert xn == self.xn
