@@ -12,7 +12,7 @@ class ZfHelper:
     def get_checkcode(image: BytesIO) -> str:
         try:
             data = image.read()
-            res = requests.post(url="http://63.211.111.82:19952/captcha/v3", data=data, timeout=5)
+            res = requests.post(url="http://kerlomz.xyi.asia:19962/captcha/v3", data=data, timeout=5)
             res.raise_for_status()
             return json.loads(res.text).get('message')
         except:
